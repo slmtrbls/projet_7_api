@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+streamlit
+tensorflow
+keras
+numpy
+mlflow
+scikit-learn
+pickle5
+python-multipart
