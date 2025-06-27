@@ -6,7 +6,7 @@ keras
 numpy
 mlflow
 scikit-learn
-pickle5
+# pickle5 - commenté car il pose problème sur Azure App Service Free Plan
 python-multipart
 pytest
 httpx

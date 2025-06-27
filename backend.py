@@ -1,5 +1,9 @@
 import os
-import pickle
+# Essayer d'utiliser pickle5 si disponible, sinon utiliser pickle standard
+try:
+    import pickle5 as pickle
+except ImportError:
+    import pickle
 import numpy as np
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, validator
