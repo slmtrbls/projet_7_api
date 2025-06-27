@@ -1,6 +1,7 @@
 pip==25.1.1
 fastapi
 uvicorn
+streamlit
 tensorflow-cpu
 keras
 numpy
