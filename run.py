@@ -6,6 +6,10 @@ import time
 def main():
     print("Starting application...")
     
+    # Installation des dépendances
+    print("Installing dependencies...")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-cache-dir", "-r", "requirements.txt"])
+    
     # Définir le port
     port = os.environ.get('PORT', '8000')
     print(f"Using port: {port}")

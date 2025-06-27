@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Installation des dépendances
+echo "Installing dependencies..."
+pip install --no-cache-dir -r requirements.txt
+
 # Définition du port pour Azure (utilise la variable PORT d'Azure ou 8000 par défaut)
 PORT=${PORT:-8000}
 STREAMLIT_PORT=8501
