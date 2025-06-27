@@ -1,10 +1,18 @@
 #!/bin/bash
 
-# Installation des dépendances
-pip install -r requirements.txt
+# Définition du port pour Azure (utilise la variable PORT d'Azure ou 8000 par défaut)
+PORT=${PORT:-8000}
+STREAMLIT_PORT=8501
+
+echo "Starting application on port $PORT"
 
 # Démarrage du backend FastAPI
-gunicorn backend:app --bind=0.0.0.0:8000 --workers=4 --daemon
+gunicorn backend:app --bind=0.0.0.0:$PORT --workers=2 --timeout 600 --access-logfile=- --error-logfile=- &
+BACKEND_PID=$!
 
 # Démarrage du frontend Streamlit
-streamlit run frontend.py --server.port=8501 --server.address=0.0.0.0 
+streamlit run frontend.py --server.port=$STREAMLIT_PORT --server.address=0.0.0.0 &
+FRONTEND_PID=$!
+
+# Attendre que les deux processus se terminent
+wait $BACKEND_PID $FRONTEND_PID 
