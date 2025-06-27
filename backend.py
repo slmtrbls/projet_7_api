@@ -7,7 +7,8 @@ except ImportError:
 import numpy as np
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, validator
-import mlflow.keras
+import tensorflow as tf
+from tensorflow import keras
 
 # Définition du modèle de données pour l'API
 class TweetRequest(BaseModel):
@@ -36,9 +37,9 @@ async def load_model():
     global model, tokenizer
     
     try:
-        # Chargement du modèle MLflow
-        model_path = os.path.join(os.path.dirname(__file__), "best_sentiment_model")
-        model = mlflow.keras.load_model(model_path)
+        # Chargement direct du modèle Keras (on contourne MLflow)
+        model_path = os.path.join(os.path.dirname(__file__), "best_sentiment_model", "data", "model.keras")
+        model = keras.models.load_model(model_path)
         
         # Chargement du tokenizer
         tokenizer_path = os.path.join(os.path.dirname(__file__), "tokenizer.pkl", "tmpaqfbp_4q.pkl")
