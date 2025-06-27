@@ -7,17 +7,21 @@ import time
 def main():
     print("Starting application...")
     
+    # Verifier la version de Python
+    print("Python version:")
+    print(sys.version)
+    
     # Installation des dependances
     print("Installing dependencies...")
     subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-cache-dir", "-r", "requirements.txt"])
     
     # Definir le port
     port = os.environ.get('PORT', '8000')
-    print(f"Using port: {port}")
+    print("Using port: {}".format(port))
     
     # Demarrer le backend
     print("Starting backend...")
-    backend_cmd = f"gunicorn backend:app --bind=0.0.0.0:{port} --workers=2 --timeout 600"
+    backend_cmd = "gunicorn backend:app --bind=0.0.0.0:{} --workers=2 --timeout 600".format(port)
     backend_process = subprocess.Popen(backend_cmd, shell=True)
     
     # Attendre un peu pour que le backend démarre

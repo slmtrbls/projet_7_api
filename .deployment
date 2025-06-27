@@ -1,4 +1,4 @@
 [config]
-command = python run.py
+command = python3 run.py
 SCM_DO_BUILD_DURING_DEPLOYMENT=true
 POST_BUILD_COMMAND=pip install --no-cache-dir -r requirements.txt 
