@@ -8,3 +8,9 @@ mlflow
 scikit-learn
 pickle5
 python-multipart
+pytest
+httpx
+pytest-cov
+gunicorn
+pytest-mock
+requests

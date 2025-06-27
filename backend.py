@@ -2,12 +2,18 @@ import os
 import pickle
 import numpy as np
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 import mlflow.keras
 
 # Définition du modèle de données pour l'API
 class TweetRequest(BaseModel):
     text: str
+    
+    @validator('text')
+    def text_must_not_be_empty(cls, v):
+        if not v.strip():
+            raise ValueError("Le texte ne peut pas être vide")
+        return v
 
 class SentimentResponse(BaseModel):
     sentiment: str
@@ -15,6 +21,10 @@ class SentimentResponse(BaseModel):
 
 # Initialisation de l'API
 app = FastAPI(title="API d'Analyse de Sentiment")
+
+# Initialisation des variables globales
+model = None
+tokenizer = None
 
 # Chargement du modèle et du tokenizer
 @app.on_event("startup")
@@ -38,6 +48,10 @@ async def load_model():
 
 # Prétraitement du texte et prédiction
 def preprocess_and_predict(text):
+    # Vérifier que le tokenizer et le modèle sont chargés
+    if tokenizer is None or model is None:
+        raise ValueError("Le modèle ou le tokenizer n'est pas chargé")
+        
     # Tokenization du texte
     sequence = tokenizer.texts_to_sequences([text])
     

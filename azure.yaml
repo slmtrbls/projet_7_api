@@ -1,0 +1,20 @@
+name: sentiment-analysis-app
+services:
+  web:
+    project: .
+    language: python
+    host: appservice
+    env:
+      - name: AZURE_WEBAPP_NAME
+        value: sentiment-analysis-app
+      - name: AZURE_RESOURCE_GROUP
+        value: sentiment-analysis
+      - name: PYTHON_VERSION
+        value: "3.9"
+      - name: SCM_DO_BUILD_DURING_DEPLOYMENT
+        value: "true"
+
+# Configuration pour le déploiement
+deploy:
+  primaryRegion: westeurope
+  environmentName: production 

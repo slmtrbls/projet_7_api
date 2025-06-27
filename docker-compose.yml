@@ -1,0 +1,23 @@
+services:
+  backend:
+    build: .
+    command: uvicorn backend:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_PATH=best_sentiment_model
+      - TOKENIZER_PATH=tokenizer.pkl/tmpaqfbp_4q.pkl
+
+  frontend:
+    build: .
+    command: streamlit run frontend.py --server.port=8501 --server.address=0.0.0.0
+    volumes:
+      - .:/app
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://backend:8000
+    depends_on:
+      - backend 
