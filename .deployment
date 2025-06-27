@@ -1,3 +1,2 @@
 [config]
-command = python3 run.py
 SCM_DO_BUILD_DURING_DEPLOYMENT=true 
