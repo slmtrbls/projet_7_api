@@ -3,6 +3,7 @@ import os
 import subprocess
 import sys
 import time
+import shutil
 
 
 def main():
@@ -55,6 +56,63 @@ def main():
         print("Stopping application...")
         backend_process.terminate()
         frontend_process.terminate()
+
+
+# ------------------------------------------------------------
+# Helper: ensure pip is available and install dependencies
+# ------------------------------------------------------------
+
+
+def install_dependencies():
+    """Install required packages listed in requirements.txt.
+
+    1. S'assure que 'pip' est disponible.
+    2. Installe les dépendances si 'gunicorn' ou 'streamlit' manquent.
+    """
+
+    def pip_available():
+        return shutil.which("pip") is not None
+
+    # Vérifier si gunicorn est déjà disponible
+    if shutil.which("gunicorn") and shutil.which("streamlit"):
+        print("Dependencies already present – skipping installation")
+        return
+
+    print("Installing Python dependencies ...")
+
+    # Étape 1 : s'assurer que pip existe
+    if not pip_available():
+        print("pip not found – bootstrapping with ensurepip ...")
+        try:
+            import ensurepip  # lazy import
+            ensurepip.bootstrap(upgrade=True)
+        except Exception as e:
+            print(f"ensurepip failed: {e}. Falling back to get-pip.py …")
+            # Télécharger get-pip.py
+            try:
+                subprocess.check_call([
+                    "curl",
+                    "https://bootstrap.pypa.io/get-pip.py",
+                    "-o",
+                    "get-pip.py",
+                ])
+                subprocess.check_call([sys.executable, "get-pip.py", "--user"])
+            except Exception as ee:
+                print(f"get-pip failed as well: {ee}")
+                print("Unable to install pip – exiting …")
+                sys.exit(1)
+
+    # Étape 2 : installer les requirements
+    try:
+        subprocess.check_call(
+            [sys.executable, "-m", "pip", "install", "--no-cache-dir", "-r", "requirements.txt"]
+        )
+    except subprocess.CalledProcessError as inst_err:
+        print(f"pip install failed: {inst_err}")
+        sys.exit(1)
+
+
+install_dependencies()
 
 
 if __name__ == "__main__":
