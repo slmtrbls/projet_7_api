@@ -21,6 +21,8 @@ except ImportError:
     # Librairie non installée (exécution locale ou tests) : on loggue simplement
     print("[INFO] azure-monitor-opentelemetry non disponible – télémétrie désactivée.")
 
+# Compatibilité typing (Python < 3.10)
+from typing import Optional
 from opentelemetry import trace
 
 
@@ -41,7 +43,7 @@ class SentimentResponse(BaseModel):
 class Feedback(BaseModel):
     text: str
     predicted: str            # sentiment renvoyé par le modèle
-    comment: str | None = None  # commentaire facultatif de l'utilisateur
+    comment: Optional[str] = None  # commentaire facultatif de l'utilisateur
 
 # Initialisation de l'API
 app = FastAPI(title="API d'Analyse de Sentiment")
