@@ -9,6 +9,11 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, validator
 import tensorflow as tf
 from tensorflow import keras
+from azure.monitor.opentelemetry import configure_azure_monitor
+configure_azure_monitor()   
+
+from opentelemetry import trace
+
 
 # Définition du modèle de données pour l'API
 class TweetRequest(BaseModel):
@@ -23,6 +28,11 @@ class TweetRequest(BaseModel):
 class SentimentResponse(BaseModel):
     sentiment: str
     confidence: float
+
+class Feedback(BaseModel):
+    text: str
+    predicted: str            # sentiment renvoyé par le modèle
+    comment: str | None = None  # commentaire facultatif de l'utilisateur
 
 # Initialisation de l'API
 app = FastAPI(title="API d'Analyse de Sentiment")
@@ -89,6 +99,18 @@ async def predict_sentiment(request: TweetRequest):
         return {"sentiment": sentiment, "confidence": confidence * 100}  # Pourcentage de confiance
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erreur lors de la prédiction: {str(e)}")
+
+# Endpoint pour recueillir les tweets mal prédits
+@app.post("/feedback")
+async def misprediction(feedback: Feedback):
+    """Enregistre un tweet considéré comme mal prédit dans Application Insights."""
+    tracer = trace.get_tracer(__name__)
+    with tracer.start_as_current_span("misprediction") as span:
+        span.set_attribute("tweet.text", feedback.text)
+        span.set_attribute("tweet.predicted", feedback.predicted)
+        if feedback.comment:
+            span.set_attribute("tweet.comment", feedback.comment)
+    return {"status": "recorded"}
 
 # Route de test pour vérifier que l'API fonctionne
 @app.get("/")

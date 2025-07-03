@@ -43,6 +43,9 @@ def main():
     # Zone de saisie du texte
     user_input = st.text_area("Entrez votre texte ici:", height=150)
 
+    # Zone de commentaire facultatif (affichée après analyse)
+    feedback_comment = st.text_input("Commentaire (facultatif)")
+
     # Bouton d'analyse
     if st.button("Analyser"):
         if user_input:
@@ -67,6 +70,15 @@ def main():
                                     
         else:
             st.warning("Veuillez entrer un texte à analyser.")
+
+    if st.button("Signaler une erreur de prédiction"):
+        payload = {
+            "text": user_input,
+            "predicted": sentiment,
+            "comment": feedback_comment or None,
+        }
+        requests.post(f"{API_URL}/feedback", json=payload)
+        st.success("Merci pour votre retour ! Le modèle sera bientôt amélioré.")
 
 # Pour lancer l'application: streamlit run frontend.py
 if __name__ == "__main__":

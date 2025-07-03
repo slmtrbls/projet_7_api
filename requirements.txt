@@ -15,3 +15,6 @@ pytest-cov
 gunicorn
 pytest-mock
 requests
+azure-monitor-opentelemetry-exporter
+opentelemetry-api
+opentelemetry-sdk
