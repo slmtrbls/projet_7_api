@@ -14,7 +14,7 @@ try:
 
     _conn = os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING")
     if _conn:
-        configure_azure_monitor(connection_string=_conn)
+        configure_azure_monitor(connection_string=_conn, enable_live_metrics=True)
     else:
         print("[INFO] Pas de chaîne de connexion App Insights ; télémétrie non initialisée.")
 except ImportError:

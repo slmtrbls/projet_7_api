@@ -43,9 +43,6 @@ def main():
     # Zone de saisie du texte
     user_input = st.text_area("Entrez votre texte ici:", height=150)
 
-    # Zone de commentaire facultatif (affichée après analyse)
-    feedback_comment = st.text_input("Commentaire (facultatif)")
-
     # Variables pour stocker le résultat d'analyse
     sentiment: str | None = None
     confidence: float | None = None
@@ -75,8 +72,9 @@ def main():
         else:
             st.warning("Veuillez entrer un texte à analyser.")
 
-    # Après affichage des résultats, proposer le bouton de feedback
+    # Après affichage des résultats, proposer le commentaire + bouton de feedback
     if sentiment is not None:
+        feedback_comment = st.text_input("Commentaire (facultatif)")
         if st.button("Signaler une erreur de prédiction"):
             payload = {
                 "text": user_input,
