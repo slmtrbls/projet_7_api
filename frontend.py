@@ -75,10 +75,9 @@ def main():
         else:
             st.warning("Veuillez entrer un texte à analyser.")
 
-    if st.button("Signaler une erreur de prédiction"):
-        if sentiment is None:
-            st.warning("Veuillez d'abord effectuer une analyse pour pouvoir envoyer un feedback.")
-        else:
+    # Après affichage des résultats, proposer le bouton de feedback
+    if sentiment is not None:
+        if st.button("Signaler une erreur de prédiction"):
             payload = {
                 "text": user_input,
                 "predicted": sentiment,
