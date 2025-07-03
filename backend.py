@@ -11,7 +11,12 @@ import tensorflow as tf
 from tensorflow import keras
 try:
     from azure.monitor.opentelemetry import configure_azure_monitor
-    configure_azure_monitor()
+
+    _conn = os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING")
+    if _conn:
+        configure_azure_monitor(connection_string=_conn)
+    else:
+        print("[INFO] Pas de chaîne de connexion App Insights ; télémétrie non initialisée.")
 except ImportError:
     # Librairie non installée (exécution locale ou tests) : on loggue simplement
     print("[INFO] azure-monitor-opentelemetry non disponible – télémétrie désactivée.")
