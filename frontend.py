@@ -46,6 +46,10 @@ def main():
     # Zone de commentaire facultatif (affichée après analyse)
     feedback_comment = st.text_input("Commentaire (facultatif)")
 
+    # Variables pour stocker le résultat d'analyse
+    sentiment: str | None = None
+    confidence: float | None = None
+
     # Bouton d'analyse
     if st.button("Analyser"):
         if user_input:
@@ -72,13 +76,16 @@ def main():
             st.warning("Veuillez entrer un texte à analyser.")
 
     if st.button("Signaler une erreur de prédiction"):
-        payload = {
-            "text": user_input,
-            "predicted": sentiment,
-            "comment": feedback_comment or None,
-        }
-        requests.post(f"{API_URL}/feedback", json=payload)
-        st.success("Merci pour votre retour ! Le modèle sera bientôt amélioré.")
+        if sentiment is None:
+            st.warning("Veuillez d'abord effectuer une analyse pour pouvoir envoyer un feedback.")
+        else:
+            payload = {
+                "text": user_input,
+                "predicted": sentiment,
+                "comment": feedback_comment or None,
+            }
+            requests.post(f"{API_URL}/feedback", json=payload)
+            st.success("Merci pour votre retour ! Le modèle sera amélioré.")
 
 # Pour lancer l'application: streamlit run frontend.py
 if __name__ == "__main__":
