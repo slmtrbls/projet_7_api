@@ -9,8 +9,12 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, validator
 import tensorflow as tf
 from tensorflow import keras
-from azure.monitor.opentelemetry import configure_azure_monitor
-configure_azure_monitor()   
+try:
+    from azure.monitor.opentelemetry import configure_azure_monitor
+    configure_azure_monitor()
+except ImportError:
+    # Librairie non installée (exécution locale ou tests) : on loggue simplement
+    print("[INFO] azure-monitor-opentelemetry non disponible – télémétrie désactivée.")
 
 from opentelemetry import trace
 
